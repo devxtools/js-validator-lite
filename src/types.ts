@@ -11,6 +11,7 @@ export type Rule = {
     type?: string;
     message?: string;
     regex?: RegExp;
+    required?: boolean;
     validator?: (name: string, value: any, callback: (tip: string)=> void)=> void
 }
 

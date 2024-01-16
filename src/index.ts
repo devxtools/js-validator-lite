@@ -29,6 +29,11 @@ export default class FieldsValidator {
             // @ts-ignore
             for (const item of rules) {
                 // 自定义扩展验证
+                const regularsItem = this.regulars[item.type as string] as RuleType;
+                if (item.required && !value) {
+                    errors[fieldName] = item.message || `Field ${fieldName} cannot be empty`;
+                    break
+                }
                 if (item.validator && typeof item.validator === 'function') {
                     function callbackFun(tip: string) {
                         if (tip) {
@@ -37,9 +42,7 @@ export default class FieldsValidator {
                     }
                     await item.validator(fieldName, value, callbackFun);
                     break
-                } 
-                const regularsItem = this.regulars[item.type as string] as RuleType;
-                if (item.type && regularsItem) {
+                } else if (item.type && regularsItem) {
                     if (typeof regularsItem.value === 'function' && !regularsItem.value(value)) {
                         errors[fieldName] = item.message || regularsItem.message;
                         break
@@ -60,6 +63,7 @@ export default class FieldsValidator {
                 }
             }
         }
+        console.log(errors, 'errors')
         return {
             valid: Object.keys(errors).length === 0,
             fields: errors,

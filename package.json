@@ -1,6 +1,6 @@
 {
   "name": "js-validator-lite",
-  "version": "1.0.1",
+  "version": "1.0.10",
   "type": "module",
   "files": [
     "dist"

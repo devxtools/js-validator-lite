@@ -1,6 +1,6 @@
 var g = Object.defineProperty;
 var d = (l, s, e) => s in l ? g(l, s, { enumerable: !0, configurable: !0, writable: !0, value: e }) : l[s] = e;
-var i = (l, s, e) => (d(l, typeof s != "symbol" ? s + "" : s, e), e);
+var o = (l, s, e) => (d(l, typeof s != "symbol" ? s + "" : s, e), e);
 const c = {
   mixNumLetter: {
     value: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,}$/,
@@ -100,24 +100,27 @@ const c = {
 };
 class f {
   constructor(s, e = {}) {
-    i(this, "rules");
-    i(this, "regulars");
+    o(this, "rules");
+    o(this, "regulars");
     this.rules = s || {}, this.regulars = Object.assign(e, c);
   }
   async validate(s) {
     const e = {};
-    for (const [t, m] of Object.entries(this.rules)) {
+    for (const [t, n] of Object.entries(this.rules)) {
       const u = s[t];
-      for (const a of m) {
-        if (a.validator && typeof a.validator == "function") {
-          let n = function(o) {
-            o && (e[t] = o || a.message || `Field ${t} failed custom validation.`);
-          };
-          await a.validator(t, u, n);
+      for (const a of n) {
+        const r = this.regulars[a.type];
+        if (a.required && !u) {
+          e[t] = a.message || `Field ${t} cannot be empty`;
           break;
         }
-        const r = this.regulars[a.type];
-        if (a.type && r) {
+        if (a.validator && typeof a.validator == "function") {
+          let m = function(i) {
+            i && (e[t] = i || a.message || `Field ${t} failed custom validation.`);
+          };
+          await a.validator(t, u, m);
+          break;
+        } else if (a.type && r) {
           if (typeof r.value == "function" && !r.value(u)) {
             e[t] = a.message || r.message;
             break;
@@ -136,7 +139,7 @@ class f {
         }
       }
     }
-    return {
+    return console.log(e, "errors"), {
       valid: Object.keys(e).length === 0,
       fields: e
     };
