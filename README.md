@@ -1,7 +1,5 @@
 # js-validator-lite
-<!-- 字段验证器 -->
-# A very lightweight field validator 
-<!-- 很轻量的字段验证器 -->
+#### 字段验证器，表单验证
 # install
 ```
 pnpm add js-validator-lite
