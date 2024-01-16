@@ -17,7 +17,7 @@
     "dev": "vite",
     "build": "vite build && pnpm run build:types",
     "build:types": "tsc --emitDeclarationOnly",
-    "deploy": "npm publish",
+    "deploy": "npm publish --registry=https://registry.npmjs.org/",
     "remove": "npm unpublish --registry https://registry.npmjs.org/ js-validator-lite@请输入你的版本号",
     "deprecate": "npm deprecate js-validator-lite@'< 1.0.0' 'critical bug fixed in v1.0.0'",
     "test": "vitest"
