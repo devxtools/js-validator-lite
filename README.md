@@ -40,3 +40,15 @@ validator.validate(data).then(({ valid, fields })=>{
     console.log(err, 'errerr2')
 })
 ```
+
+```js
+// Return results
+{
+    valid: true | false,
+    fields:{
+        // Fields that failed validation， For example:
+        name: 'name is required'
+    }
+}
+```
+
