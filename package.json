@@ -1,6 +1,6 @@
 {
   "name": "js-validator-lite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -26,5 +26,25 @@
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
     "vitest": "^1.2.0"
-  }
+  },
+  "vite": {
+    "plugins": []
+  },
+  "description": "js-validator-lite Field validator, form validation",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:devxtools/js-validator-lite.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devxtools/js-validator-lite/issues/issues"
+  },
+  "homepage": "https://github.com/devxtools/js-validator-lite#readme",
+  "author": "335296558@qq.com",
+  "license": "ISC",
+  "keywords": [
+    "js-validator-lite",
+    "validator",
+    "FieldsValidator",
+    "FormValidator"
+  ]
 }
