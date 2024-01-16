@@ -1,5 +1,5 @@
 # js-validator-lite
-#### 字段验证器，表单验证
+#### Field validator, form validation
 # install
 ```
 pnpm add js-validator-lite
