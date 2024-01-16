@@ -2,6 +2,9 @@
   "name": "js-validator-lite",
   "version": "1.0.1",
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
