@@ -1,6 +1,6 @@
 var d = Object.defineProperty;
 var g = (l, s, e) => s in l ? d(l, s, { enumerable: !0, configurable: !0, writable: !0, value: e }) : l[s] = e;
-var o = (l, s, e) => (g(l, typeof s != "symbol" ? s + "" : s, e), e);
+var i = (l, s, e) => (g(l, typeof s != "symbol" ? s + "" : s, e), e);
 const c = {
   mixNumLetter: {
     value: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,}$/,
@@ -100,8 +100,8 @@ const c = {
 };
 class f {
   constructor(s, e = {}) {
-    o(this, "rules");
-    o(this, "regulars");
+    i(this, "rules");
+    i(this, "regulars");
     this.rules = s || {}, this.regulars = Object.assign(e, c);
   }
   async validate(s) {
@@ -133,15 +133,15 @@ class f {
           break;
         }
         if (a.validator && typeof a.validator == "function") {
-          let m = function(i) {
-            i && (e[t] = i || a.message || `Field ${t} failed custom validation.`);
+          let m = function(o) {
+            o && (e[t] = o || a.message || `Field ${t} failed custom validation.`);
           };
           await a.validator(t, r, m);
           break;
         }
       }
     }
-    return console.log(e, "errors"), {
+    return {
       valid: Object.keys(e).length === 0,
       fields: e
     };
