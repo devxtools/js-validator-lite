@@ -70,7 +70,6 @@ export default class FieldsValidator {
                  
             }
         }
-        console.log(errors, 'errors')
         return {
             valid: Object.keys(errors).length === 0,
             fields: errors,
