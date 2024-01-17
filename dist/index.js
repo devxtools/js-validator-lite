@@ -1,6 +1,6 @@
-var g = Object.defineProperty;
-var d = (l, s, e) => s in l ? g(l, s, { enumerable: !0, configurable: !0, writable: !0, value: e }) : l[s] = e;
-var o = (l, s, e) => (d(l, typeof s != "symbol" ? s + "" : s, e), e);
+var d = Object.defineProperty;
+var g = (l, s, e) => s in l ? d(l, s, { enumerable: !0, configurable: !0, writable: !0, value: e }) : l[s] = e;
+var o = (l, s, e) => (g(l, typeof s != "symbol" ? s + "" : s, e), e);
 const c = {
   mixNumLetter: {
     value: /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,}$/,
@@ -107,34 +107,36 @@ class f {
   async validate(s) {
     const e = {};
     for (const [t, n] of Object.entries(this.rules)) {
-      const u = s[t];
+      const r = s[t];
       for (const a of n) {
-        const r = this.regulars[a.type];
-        if (a.required && !u) {
-          e[t] = a.message || `Field ${t} cannot be empty`;
+        if (a.type && typeof r !== a.type) {
+          e[t] = `Field ${t} should be of type ${a.type}.`;
+          break;
+        }
+        if (a.required && !r && !/\d/.test(r)) {
+          e[t] = a.message || `Field ${t} cannot be empty.`;
+          break;
+        }
+        const u = this.regulars[a.type];
+        if (a.type && u) {
+          if (typeof u.value == "function" && !u.value(r)) {
+            e[t] = a.message || u.message;
+            break;
+          }
+          if (typeof u.value == "object" && !u.value.test(r)) {
+            e[t] = a.message || u.message;
+            break;
+          }
+        }
+        if (a.regex && !a.regex.test(r)) {
+          e[t] = a.message || `Field ${t} does not match the required pattern.`;
           break;
         }
         if (a.validator && typeof a.validator == "function") {
           let m = function(i) {
             i && (e[t] = i || a.message || `Field ${t} failed custom validation.`);
           };
-          await a.validator(t, u, m);
-          break;
-        } else if (a.type && r) {
-          if (typeof r.value == "function" && !r.value(u)) {
-            e[t] = a.message || r.message;
-            break;
-          }
-          if (typeof r.value == "object" && !r.value.test(u)) {
-            e[t] = a.message || r.message;
-            break;
-          }
-        } else if (a.type && typeof u !== a.type) {
-          e[t] = a.message || `Field ${t} should be of type ${a.type}.`;
-          break;
-        }
-        if (a.regex && !a.regex.test(u)) {
-          e[t] = a.message || `Field ${t} does not match the required pattern.`;
+          await a.validator(t, r, m);
           break;
         }
       }

@@ -28,21 +28,20 @@ export default class FieldsValidator {
             const value = data[fieldName];
             // @ts-ignore
             for (const item of rules) {
-                // 自定义扩展验证
-                const regularsItem = this.regulars[item.type as string] as RuleType;
-                if (item.required && !value) {
-                    errors[fieldName] = item.message || `Field ${fieldName} cannot be empty`;
+
+                if (item.type && typeof value !== item.type) {
+                    // 类型验证
+                    errors[fieldName] = `Field ${fieldName} should be of type ${item.type}.`;
                     break
                 }
-                if (item.validator && typeof item.validator === 'function') {
-                    function callbackFun(tip: string) {
-                        if (tip) {
-                            errors[fieldName] = tip || item.message || `Field ${fieldName} failed custom validation.`;
-                        }
-                    }
-                    await item.validator(fieldName, value, callbackFun);
-                    break
-                } else if (item.type && regularsItem) {
+
+                if (item.required && !value && !/\d/.test(value)) {
+                    errors[fieldName] = item.message || `Field ${fieldName} cannot be empty.`;
+                    break;
+                }
+
+                const regularsItem = this.regulars[item.type as string] as RuleType;
+                if (item.type && regularsItem) {
                     if (typeof regularsItem.value === 'function' && !regularsItem.value(value)) {
                         errors[fieldName] = item.message || regularsItem.message;
                         break
@@ -51,16 +50,24 @@ export default class FieldsValidator {
                         errors[fieldName] = item.message || regularsItem.message;
                         break
                     }
-                } else if (item.type && typeof value !== item.type) {
-                    // 类型验证
-                    errors[fieldName] = item.message || `Field ${fieldName} should be of type ${item.type}.`;
-                    break
                 } 
+
                 if (item.regex && !item.regex.test(value)) {
                     // 正则规则验证
                     errors[fieldName] = item.message || `Field ${fieldName} does not match the required pattern.`;
                     break
                 }
+
+                if (item.validator && typeof item.validator === 'function') {
+                    function callbackFun(tip: string) {
+                        if (tip) {
+                            errors[fieldName] = tip || item.message || `Field ${fieldName} failed custom validation.`;
+                        }
+                    }
+                    await item.validator(fieldName, value, callbackFun);
+                    break
+                } 
+                 
             }
         }
         console.log(errors, 'errors')

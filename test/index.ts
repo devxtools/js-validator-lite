@@ -7,24 +7,44 @@ function wait() {
 }
 describe('JSvalidator', () => {
     const rules = {
-        name: [{ type: 'number', required: true, message: 'Name must be a string' }],
-        age: [{ 
+        // name: [{ type: 'number', required: true, message: 'Name must be a string' }],
+        // age: [{ 
+        //     type: 'number', 
+        //     message: 'Age must be a number',
+        //     async validator (fieldName, value, callback){
+        //         const rs = await wait();
+        //         // callback('===0=0=0=0=00=')
+        //         callback()
+        //     }
+        // }],
+        // email: [{ type: 'email' }]
+        chunkIndex: [{ type: 'number', required: true }],
+        totalChunks: [{ type: 'number', required: true, message: 'totalChunks is required' }],
+        chunkSize: [{ 
             type: 'number', 
-            message: 'Age must be a number',
+            required: true, 
+            message: 'chunkSize is required' 
+        },{
             async validator (fieldName, value, callback){
                 const rs = await wait();
-                // callback('===0=0=0=0=00=')
-                callback()
+                if (value > 1000) {
+                    callback('文件大小不能超过1000');
+                    return
+                }
+                callback();
             }
         }],
-        email: [{ type: 'email' }]
     };
     const validator = new JSvalidator(rules);
     test('should return valid for correct data types', async () => {
         const data = {
+            chunkIndex: 0,
+            totalChunks: 1,
+            chunkSize: 3145728,
+            fileSize: 94874,
         //   name: 'John Doe',
-          age: 30,
-          email: '303@gmail.com'
+        //   age: 30,
+        //   email: '303@gmail.com'
         };
         const result = await validator.validate(data);
         expect(result.valid).toBe(true);
