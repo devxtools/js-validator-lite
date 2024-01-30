@@ -29,7 +29,9 @@ export default class FieldsValidator {
             // @ts-ignore
             for (const item of rules) {
 
-                if (item.type && typeof value !== item.type) {
+                const regularsItem = this.regulars[item.type as string] as RuleType;
+
+                if (item.type && !regularsItem && typeof value !== item.type) {
                     // 类型验证
                     errors[fieldName] = `Field ${fieldName} should be of type ${item.type}.`;
                     break
@@ -40,7 +42,6 @@ export default class FieldsValidator {
                     break;
                 }
 
-                const regularsItem = this.regulars[item.type as string] as RuleType;
                 if (item.type && regularsItem) {
                     if (typeof regularsItem.value === 'function' && !regularsItem.value(value)) {
                         errors[fieldName] = item.message || regularsItem.message;
