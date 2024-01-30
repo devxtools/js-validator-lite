@@ -107,28 +107,28 @@ class f {
   async validate(s) {
     const e = {};
     for (const [t, n] of Object.entries(this.rules)) {
-      const r = s[t];
+      const u = s[t];
       for (const a of n) {
-        if (a.type && typeof r !== a.type) {
+        const r = this.regulars[a.type];
+        if (a.type && !r && typeof u !== a.type) {
           e[t] = `Field ${t} should be of type ${a.type}.`;
           break;
         }
-        if (a.required && !r && !/\d/.test(r)) {
+        if (a.required && !u && !/\d/.test(u)) {
           e[t] = a.message || `Field ${t} cannot be empty.`;
           break;
         }
-        const u = this.regulars[a.type];
-        if (a.type && u) {
-          if (typeof u.value == "function" && !u.value(r)) {
-            e[t] = a.message || u.message;
+        if (a.type && r) {
+          if (typeof r.value == "function" && !r.value(u)) {
+            e[t] = a.message || r.message;
             break;
           }
-          if (typeof u.value == "object" && !u.value.test(r)) {
-            e[t] = a.message || u.message;
+          if (typeof r.value == "object" && !r.value.test(u)) {
+            e[t] = a.message || r.message;
             break;
           }
         }
-        if (a.regex && !a.regex.test(r)) {
+        if (a.regex && !a.regex.test(u)) {
           e[t] = a.message || `Field ${t} does not match the required pattern.`;
           break;
         }
@@ -136,7 +136,7 @@ class f {
           let m = function(o) {
             o && (e[t] = o || a.message || `Field ${t} failed custom validation.`);
           };
-          await a.validator(t, r, m);
+          await a.validator(t, u, m);
           break;
         }
       }
